@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: balcony
+  namespace: balcony
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: balcony
+  template:
+    metadata:
+      labels:
+        app: balcony
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+      - name: balcony
+        image: ofthetimelords/vtable.balcony:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: Balcony__AppConfig__PrivilegedKey
+          value: "<Use this key for generate new & delete operations>"
+        - name: Balcony__AppConfig__RefreshPeriodMinutes
+          value: "120"
+        - name: Balcony__AppConfig__ImagesToKeep
+          value: "48"
+        - name: Balcony__AppConfig__ImagesToShow
+          value: "24"
+        - name: Balcony__AppConfig__ImagesPath
+          value: /balcony_images/
+        - name: Balcony__AppConfig__ObfuscateSnapshots
+          value: "true"
+        - name: Balcony__AppServices__Camera
+          value: Tapo
+        - name: Balcony__AppServices__Image
+          value: Flux2_Klein_4b_Edit
+        - name: Balcony__AppServices__Payload
+          value: FluxPayload
+        - name: Balcony__Tapo__Credentials__User
+          value: covenantofmystics
+        - name: Balcony__Tapo__Credentials__Password
+          value: 1giagianitsa
+        - name: Balcony__Tapo__Credentials__Endpoint
+          value: 10.70.0.120
+        - name: Balcony__Tapo__FixDistortionStrength
+          value: "-0.06"
+        - name: Balcony__Tapo__CropTop
+          value: "0"
+        - name: Balcony__Tapo__CropRight
+          value: "0"
+        - name: Balcony__Tapo__CropBottom
+          value: "0"
+        - name: Balcony__Tapo__CropLeft
+          value: "0"
+        - name: Balcony__Flux2_Klein_4b_Edit__Key
+          value: "<enter your Flux API key>"
+        - name: Balcony__FluxPayload__PromptsFile
+          value: ./prompts.json
+        - name: Balcony__FluxPayload__InferenceSteps
+          value: "6"
+        - name: Balcony__FluxPayload__SafetyChecker
+          value: "false"
+        - name: Balcony__FluxPayload__ThemesSkipCache
+          value: "10"
+        - name: Balcony__FluxPayload__ImageSize__Width
+          value: "1024"
+        - name: Balcony__FluxPayload__ImageSize__Height
+          value: "576"
+        - name: OPENCV_FFMPEG_CAPTURE_OPTIONS
+          value: "rtsp_transport;tcp" # necessary to allow for TCP camera transport, making deployments in Kubernetes easier
+        volumeMounts:
+        - mountPath: /balcony_images
+          name: balcony-images
+      volumes:
+        - name: balcony-images
+          persistentVolumeClaim:
+            claimName: balcony-images
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  name: balcony
+  namespace: balcony
+spec:
+  type: LoadBalancer
+  selector:
+    app: balcony
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: balcony-images
+  namespace: balcony
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

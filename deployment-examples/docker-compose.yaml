@@ -1,0 +1,38 @@
+services:
+  balcony:
+    deploy:
+      placement:
+        constraints:
+        - kubernetes.io/arch=amd64
+      replicas: 1
+    environment:
+    - Balcony__AppConfig__PrivilegedKey=<Use this key for generate new & delete operations>
+    - Balcony__AppConfig__RefreshPeriodMinutes=120
+    - Balcony__AppConfig__ImagesToKeep=48
+    - Balcony__AppConfig__ImagesToShow=24
+    - Balcony__AppConfig__ImagesPath=/balcony_images/
+    - Balcony__AppConfig__ObfuscateSnapshots=true
+    - Balcony__AppServices__Camera=Tapo
+    - Balcony__AppServices__Image=Flux2_Klein_4b_Edit
+    - Balcony__AppServices__Payload=FluxPayload
+    - Balcony__Tapo__Credentials__User=covenantofmystics
+    - Balcony__Tapo__Credentials__Password=1giagianitsa
+    - Balcony__Tapo__Credentials__Endpoint=10.70.0.120
+    - Balcony__Tapo__FixDistortionStrength=-0.06
+    - Balcony__Tapo__CropTop=0
+    - Balcony__Tapo__CropRight=0
+    - Balcony__Tapo__CropBottom=0
+    - Balcony__Tapo__CropLeft=0
+    - Balcony__Flux2_Klein_4b_Edit__Key=<enter your Flux API key>
+    - Balcony__FluxPayload__PromptsFile=./prompts.json
+    - Balcony__FluxPayload__InferenceSteps=6
+    - Balcony__FluxPayload__SafetyChecker=false
+    - Balcony__FluxPayload__ThemesSkipCache=10
+    - Balcony__FluxPayload__ImageSize__Width=1024
+    - Balcony__FluxPayload__ImageSize__Height=576
+    - OPENCV_FFMPEG_CAPTURE_OPTIONS=rtsp_transport;tcp
+    image: ofthetimelords/vtable.balcony:latest
+    ports:
+    - '8080'
+    volumes:
+    - /somewhere/to/store/images:/balcony_images

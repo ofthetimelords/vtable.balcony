@@ -4,6 +4,7 @@
 appSettings.Development.json
 build.sh
 .vs/
+*.bak
 
 # User-specific files
 *.suo
