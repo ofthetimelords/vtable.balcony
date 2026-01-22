@@ -1,0 +1,270 @@
+﻿@page
+@using Vtable.Balcony.Helpers
+@model Vtable.Balcony.Pages.IndexModel
+@{
+}
+
+<html>
+<head>
+    <title>My Balcony</title>
+    <style nonce="@Model.HttpContext.Items["CSPNonce"]">
+        .currentImages {
+        }
+
+        .imageBox, .infoBox {
+            background: #1e232d;
+            text-align: center;
+            border: rgb(150,150,150) solid 5px;
+            border-radius: 30px;
+        }
+
+        .imageBox {
+            position: relative;
+            box-shadow: 20px 20px 30px rgba(0,0,0,.75);
+            margin: 10px auto;
+            max-width: 1024px;
+            position: relative;
+            z-index: 100;
+        }
+
+            .imageBox:after {
+                box-shadow: inset -10px -10px 30px rgba(0,0,0,.7);
+                content: "";
+                height: 100%;
+                width: 100%;
+                right: 0;
+                top: 0;
+                position: absolute;
+                border-radius: inherit;
+                padding: 0;
+                pointer-events: none;
+            }
+
+
+        .highlight {
+            box-shadow: inset 10px 10px 30px rgba(255,255,255,.4);
+            position: absolute;
+            border-radius: 30px;
+            border-radius: 25px;
+            height: 100%;
+            width: 100%;
+            right: 0;
+            top: 0;
+            pointer-events: none;
+        }
+
+        .imageBox img {
+            position: relative;
+            max-width: 100%;
+            border-radius: 30px;
+        }
+
+        .infoBox {
+            border: rgb(200,200,200) solid 5px;
+            position: absolute;
+            height: 30px;
+            color: white;
+            min-width: 100px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 15px;
+        }
+
+            .infoBox#genTitle, .infoBox#snapTitle {
+                position: absolute;
+                top: -26px;
+                left: 50px;
+            }
+
+            .infoBox#nextUpdate {
+                bottom: -26px;
+                right: 5%;
+            }
+
+        .previousImages {
+            margin: 10px 5%;
+        }
+
+        .previousContainer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 10px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgb(20,25,25) rgb(70,75,85);
+        }
+
+            .previousContainer .imageBox, .previousContainer .infoBox {
+                border-width: 3px;
+                border-radius: 20px;
+            }
+
+            .previousContainer .infoBox {
+                font-size: 0.8em;
+                height: 25px;
+                bottom: -17px;
+                left: 15px;
+            }
+
+
+        .previousBox {
+            position: relative;
+            max-width: 220px;
+            min-width: 180px;
+            margin: 10px;
+        }
+
+            .previousBox img {
+                border-radius: 18px;
+                max-width: 100%;
+            }
+
+        .previous {
+            margin-bottom: 50px;
+        }
+
+
+        .padder {
+            padding-top: 5%;
+        }
+
+        .sl-overlay {
+            background: black !important;
+            opacity: 0.8 !important;
+        }
+
+        .sl-navigation button {
+            color: white !important;
+        }
+
+    </style>
+    <link rel="stylesheet" href="/Static/simple-lightbox.min.css" />
+    <link rel="stylesheet" href="/Static/Styles.css" />
+    <script nonce="@Model.HttpContext.Items["CSPNonce"]" src="/Static/simple-lightbox.min.js"></script>
+
+    <script nonce="@Model.HttpContext.Items["CSPNonce"]">
+        document.addEventListener('DOMContentLoaded', function () {
+            var lbSnap = new SimpleLightbox('.previous.gen a', { /* options */ });
+            var lbGen = new SimpleLightbox('.previous.snap a', { /* options */ });
+        });
+
+        function checkIfReady() {
+            const evt = new EventSource("/ready");
+
+            evt.onmessage = (event) => {
+                // Update images when server says "ready"
+                document.getElementById("snapshot").src = "/snapshot?ts=" + Date.now();
+                document.getElementById("gen").src = "/gen?ts=" + Date.now();
+
+                var json = JSON.parse(event.data);
+
+                document.getElementById("genTitle").innerHTML = json.theme;
+                document.getElementById("nextUpdate").innerHTML = "Next in " + json.nextUpdate;
+
+                evt.close();
+            };
+
+            setTimeout(checkIfReady, 60000);
+        }
+
+        checkIfReady();
+    </script>
+</head>
+<body>
+    <h1>Welcome to my balcony!</h1>
+    <p class="subtitle">Scroll to the <a href="#explanation">bottom</a> for more details</p>
+
+    <div id="currentImages">
+
+        <div class="imageBox" id="genImage">
+            <img id="gen" src="/Static/spin.gif" />
+            <div id="genTitle" class="infoBox">
+                <span>Updating, please wait...</span>
+            </div>
+            <div id="nextUpdate" class="infoBox">
+                <span>Next Update: Soon</span>
+            </div>
+            <div class="highlight">
+            </div>
+        </div>
+
+        <div class="padder"></div>
+
+        <div class="imageBox" id="snapImage">
+            <div class="shadow">
+                <img id="snapshot" src="/Static/spin.gif" />
+                <div id="snapTitle" class="infoBox">
+                    <span>Original snapshot@(this.Model.AppConfig.ObfuscateSnapshots ? " (obfuscated)" : "")</span>
+                </div>
+            </div>
+            <div class="highlight"></div>
+        </div>
+    </div>
+
+    <div class="padder"></div>
+
+    <div class="previousImages">
+        <h2>Previous Images</h2>
+        <div class="previousContainer">
+            @foreach (var image in Model.PreviousImages)
+            {
+                <div class="previousBox">
+                    <div class="imageBox previous gen">
+                        <a href="/generated/@image.GenFile" target="_blank">
+                            <img src="/generated_thumb/@image.GenFile" alt="@image.GenDescription" title="@image.GenDescription" />
+                        </a>
+                        <div class="infoBox"><span>@image.GenDescription</span></div>
+                    </div>
+
+                    <div class="imageBox previous snap">
+                        <a href="/snapshots/@image.SnapFile" target="_blank">
+                            <img src="/snapshots_thumb/@image.SnapFile" alt="@image.SnapDescription" title="@image.SnapDescription" />
+                        </a>
+                        <div class="infoBox"><span>@image.SnapDescription</span></div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="padder"></div>
+
+    <div class="explanation">
+        <h2 id="explanation">What is this all about?</h2>
+        <p>Did you ever have a dream about something completely silly and then proceeded to make something out of it?</p>
+        <p>
+            That's what happened here. I have an unused security camera and no places to put it (I live in an apartment). So, while trying to figure out what to do with it,
+            I came across fal.ai, which provides API access to many different models that provide text-to-image and image-to-image operations (among others).
+        </p>
+        <p>
+            After looking at their models a bit more extensively and dismissing most of them because of their results, I found <strong>flux-2/klein/4b/edit</strong> which appears
+            to provide a good enough solution for what I need. It's also one of the cheapest models to run, at about $0.015 per request.
+        </p>
+        <h3>The "vision"</h3>
+        <p>I mounted the camera on my balcony, trying to capture as much of the open space as it allows (before the construction completes and then the camera's location will have to change.</p>
+        <p>
+            Then, I wanted to take that snapshot and alter it. Not create a completely new image out of it, not merely adjust hue and saturation. Passing a "theme" to it as a prompt
+            (randomly chosen from a pool of themes) whenever the image refreshes would create a result that still resembles the original (usually), but also add a twist to it.
+        </p>
+        <h3>But... Why?</h3>
+        <p>Why not? It's one of those silly dream ideas that amount to nothing, but are fun to build.</p>
+        <h3>What did you use to build this?</h3>
+        <p>C# is my favourite language, ever since it came out (~25 years ago). I am using v8.0 of ASP.net Core with a minimal implementation.</p>
+        <p>
+            The images are captured from the camera over RTSP using OpenCVSharp v4. OpenCVSharp has weird library compatibility issues (hence the usage of .net 8.0) but it is the simplest
+            way to get a frame out of a camera.
+        </p>
+        <p>fal.ai is contacted using plain-old HTTP requests.</p>
+        <p>The project runs in Kubernetes, and I plan to release the code to Github soon.</p>
+    </div>
+
+    <div class="footer">
+        By <a href="https://vtable.org">vtable.org</a>. Nothing here is copyrighted, but if you plan to hot-link the images, keep in mind that I may disable it if it becomes too much!
+    </div>
+</body>
+</html>

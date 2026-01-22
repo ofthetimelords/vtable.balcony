@@ -1,0 +1,25 @@
+{
+  "Prompts": {
+    "Cosmic Horror": "Turn this image to a cosmic horror movie. Ensure that the original image element outlines are somewhat recognisable",
+    "500 years in the Future": "Turn this image to a one that is 500 years later and everything has decayed. There is plant growth everywhere, buildings are damaged and half destroyed, and there's no person in sight. Ensure that the original image element outlines are somewhat recognisable",
+    "Psychological Horror": "Turn this image to a psychological horror movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Alien Invasion": "Turn this image to an alien invasion movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Fairy Tale": "Turn this image to a fantasy fairy-tale movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Cyberpunk": "Turn this image to a cyberpunk movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Steampunk": "Turn this image to a steampunk movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Future Utopia": "Turn this image to a future utopia movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Future Dystopia": "Turn this image to a future dystopia movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Star Wars": "Turn this image to a Star Wars movie. Alter it as much as needed as to not be as recognisable. Add spaceships and effects from the movies, but do not add people of any kind. Ensure that the original image element outlines are somewhat recognisable",
+    "Lord of the Rings": "Turn this image to a Peter Jackson's Lord of the Rings movie. Add fantasy elements from the movie too. Ensure that the original image element outlines are somewhat recognisable",
+    "Old Photo": "Turn this image to a highly stylised gritty very old photograph. Ensure that the original image element outlines are somewhat recognisable",
+    "Cartoon": "Turn this image to a cartoon movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Surreal": "Turn this image into something surreal but that still resembles the original. Ensure that the original image element outlines are somewhat recognisable",
+    "Studio Ghibli": "Turn this image to a Studio Ghibli movie. Ensure that the original image element outlines are somewhat recognisable",
+    "Sepia Drawing": "Turn this image to a highly stylised sepia drawing. Ensure that the original image element outlines are somewhat recognisable",
+    "Bob Ross": "Turn this image to a Bob Ross painting. Ensure that the original image element outlines are somewhat recognisable",
+    "Watercolour": "Turn this image to a watercolour painting. Ensure that the original image element outlines are somewhat recognisable",
+    "LSD": "Turn this image to a psychedelic painting, as if the viewer took LSD. Ensure that the original image element outlines are somewhat recognisable",
+    "Cubism": "Turn this image to a cubist painting. Ensure that the original image element outlines are somewhat recognisable",
+    "Van Gogh": "Turn this image to a Van Gogh painting. Ensure that the original image element outlines are somewhat recognisable"
+  }
+}
