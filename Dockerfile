@@ -21,9 +21,11 @@ RUN apt-get update && apt-get install -y \
     libopenexr25 \
     libtesseract4 \
     libgtk2.0-0 \
-    tesseract-ocr
+    tesseract-ocr \
+    git
 
-
+COPY harden.sh /harden.sh
+RUN /bin/bash /harden.sh
 WORKDIR /app
 COPY --from=build /app .
 
